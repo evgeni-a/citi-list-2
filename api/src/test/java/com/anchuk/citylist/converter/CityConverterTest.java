@@ -35,12 +35,12 @@ class CityConverterTest {
 
 
         CitiesResponse response = CityConverter.convertToDto(result);
-        assertEquals(response.getCities(), List.of(cityDto));
-        assertEquals(response.getTotalElements(), 1);
-        assertEquals(response.getTotalPages(), 1);
-        assertEquals(response.getNumber(), 0);
-        assertEquals(response.getNumberOfElements(), 1);
-        assertEquals(response.getSize(), 8);
+        assertEquals(List.of(cityDto), response.getCities());
+        assertEquals(1, response.getTotalElements());
+        assertEquals(1, response.getTotalPages());
+        assertEquals(0, response.getNumber());
+        assertEquals(1, response.getNumberOfElements());
+        assertEquals(8, response.getSize());
     }
 
 

@@ -1,6 +1,6 @@
 package com.anchuk.citylist.service;
 
-import com.anchuk.citylist.exeption.EntityNotFoundException;
+import com.anchuk.citylist.exception.EntityNotFoundException;
 import com.anchuk.citylist.model.converter.CityConverter;
 import com.anchuk.citylist.model.dto.city.CitiesResponse;
 import com.anchuk.citylist.model.dto.city.CityDto;
@@ -14,7 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -22,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CityService {
     private final CityRepository cityRepository;
 
-    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
+    @Transactional(readOnly = true, isolation = Isolation.READ_UNCOMMITTED)
     public CitiesResponse getAllCities(int page, int size, String search) {
         Pageable pageable = PageRequest.of(page, size);
         Page<CityEntity> result = StringUtils.isNotBlank(search) ?
@@ -30,15 +29,17 @@ public class CityService {
         return CityConverter.convertToDto(result);
     }
 
-    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
+    @Transactional(readOnly = true, isolation = Isolation.READ_UNCOMMITTED)
     public CityDto getCityById(Long id) {
-        CityEntity result = cityRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        CityEntity result = cityRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("City not found with ID: " + id));
         return CityConverter.convertToDto(result);
     }
 
-    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public CityDto updateCity(Long id, CityUpdateRequest request) {
-        CityEntity repositoryItem = cityRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        CityEntity repositoryItem = cityRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("City not found with ID: " + id));
         repositoryItem.setName(request.getName());
         repositoryItem.setPhoto(request.getPhoto());
         cityRepository.saveAndFlush(repositoryItem);

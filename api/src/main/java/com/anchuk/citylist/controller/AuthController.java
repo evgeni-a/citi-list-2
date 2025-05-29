@@ -7,10 +7,10 @@ import com.anchuk.citylist.service.CustomUsrDetailsService;
 import com.anchuk.citylist.service.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +27,7 @@ public class AuthController {
     private final AuthenticationManager authManager;
     private final CustomUsrDetailsService usrDetailsService;
 
-    private final static String TOKEN_TYPE = "Bearer";
+    private static final String TOKEN_TYPE = "Bearer";
 
     public AuthController(TokenService tokenService,
                           AuthenticationManager authManager,
@@ -43,7 +43,7 @@ public class AuthController {
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
-        Authentication auth = authManager.authenticate(authenticationToken);
+        authManager.authenticate(authenticationToken);
         CustomUserDetails user = (CustomUserDetails) usrDetailsService.loadUserByUsername(request.getUsername());
         Jwt accessToken = tokenService.generateAccessToken(user);
         Jwt refreshToken = tokenService.generateRefreshToken(user);
@@ -62,9 +62,22 @@ public class AuthController {
     @GetMapping("/token/refresh")
     public ResponseEntity<LoginResponse> refreshToken(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
-        String oldRefreshToken = headerAuth.substring(7);
 
+        // Validate Authorization header
+        if (headerAuth == null || !headerAuth.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(LoginResponse.builder().build());
+        }
+
+        String oldRefreshToken = headerAuth.substring(7);
         String login = tokenService.parseToken(oldRefreshToken);
+
+        // Validate token parsing result
+        if (login == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(LoginResponse.builder().build());
+        }
+
         CustomUserDetails user = (CustomUserDetails) usrDetailsService.loadUserByUsername(login);
         Jwt accessToken = tokenService.generateAccessToken(user);
         Jwt refreshToken = tokenService.generateRefreshToken(user);

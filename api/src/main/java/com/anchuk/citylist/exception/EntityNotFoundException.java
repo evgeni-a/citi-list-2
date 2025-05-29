@@ -1,4 +1,4 @@
-package com.anchuk.citylist.exeption;
+package com.anchuk.citylist.exception;
 
 public class EntityNotFoundException extends RuntimeException {
 

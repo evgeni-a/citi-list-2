@@ -14,11 +14,8 @@ import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 @Slf4j
 public class CrossOriginConfig {
 
-    @Autowired
-    private Environment env;
-
     @Bean
-    public WebMvcConfigurer corsConfigurer() {
+    public WebMvcConfigurer corsConfigurer(Environment env) {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {

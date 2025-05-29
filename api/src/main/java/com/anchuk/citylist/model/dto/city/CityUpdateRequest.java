@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import static com.anchuk.citylist.exeption.ExceptionConstants.ERR_MSG_NAME_LENGTH;
-import static com.anchuk.citylist.exeption.ExceptionConstants.ERR_MSG_PHOTO_LENGTH;
+import static com.anchuk.citylist.exception.ExceptionConstants.ERR_MSG_NAME_LENGTH;
+import static com.anchuk.citylist.exception.ExceptionConstants.ERR_MSG_PHOTO_LENGTH;
 
 @Data
 @NoArgsConstructor

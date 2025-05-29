@@ -1,6 +1,8 @@
-package com.anchuk.citylist.exeption;
+package com.anchuk.citylist.exception;
 
 public class ExceptionConstants {
+
+    private ExceptionConstants() {}
 
     public static final String RECORD_NOT_FOUND = "Record not found";
 

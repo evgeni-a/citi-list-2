@@ -1,7 +1,6 @@
 package com.anchuk.citylist.config;
 
 import com.anchuk.citylist.service.CustomUsrDetailsService;
-import com.anchuk.citylist.service.TokenService;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -13,13 +12,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -29,16 +26,19 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.http.HttpMethod;
 
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 @EnableWebSecurity
 @Configuration
 public class AppSecurityConfig {
 
     private final RsaProperties rsaKeys;
+    private final CustomUsrDetailsService customUsrDetailsService;
 
-    public AppSecurityConfig(RsaProperties rsaKeys) {
+    public AppSecurityConfig(RsaProperties rsaKeys, CustomUsrDetailsService customUsrDetailsService) {
         this.rsaKeys = rsaKeys;
+        this.customUsrDetailsService = customUsrDetailsService;
     }
 
     @Bean
@@ -47,14 +47,8 @@ public class AppSecurityConfig {
     }
 
     @Bean
-    public UserDetailsService customUserDetailsService() {
-        return new CustomUsrDetailsService();
-    }
-
-    @Bean
     public AuthenticationManager authManager() {
-        var authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(customUserDetailsService());
+        var authProvider = new DaoAuthenticationProvider(customUsrDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(authProvider);
     }
@@ -72,20 +66,16 @@ public class AppSecurityConfig {
     }
 
     @Bean
-    TokenService tokenService() {
-        return new TokenService(jwtEncoder());
-    }
-
-    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/api/v1/auth/login", "/api/v1/auth/token/refresh").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/cities/**").permitAll() // Allow read-only operations
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 .build();
     }
 
@@ -100,4 +90,3 @@ public class AppSecurityConfig {
         return authConverter;
     }
 }
-

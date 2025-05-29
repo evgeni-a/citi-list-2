@@ -12,7 +12,9 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TokenService {
 
     private final JwtEncoder jwtEncoder;
@@ -29,7 +31,7 @@ public class TokenService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(200, ChronoUnit.MINUTES))
+                .expiresAt(now.plus(30, ChronoUnit.MINUTES))
                 .subject(usrDetails.getUsername())
                 .claim("scope", scope)
                 .build();
@@ -59,8 +61,7 @@ public class TokenService {
     public String parseToken(String token) {
         try {
             SignedJWT decodedJWT = SignedJWT.parse(token);
-            String subject = decodedJWT.getJWTClaimsSet().getSubject();
-            return subject;
+            return decodedJWT.getJWTClaimsSet().getSubject();
         } catch (ParseException e) {
             e.printStackTrace();
         }

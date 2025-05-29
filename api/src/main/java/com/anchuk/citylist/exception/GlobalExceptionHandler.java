@@ -1,4 +1,4 @@
-package com.anchuk.citylist.exeption;
+package com.anchuk.citylist.exception;
 
 import com.anchuk.citylist.model.dto.ErrorResponse;
 import com.nimbusds.jose.shaded.gson.Gson;
@@ -24,7 +24,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest request) {
         log.error(ex.getMessage(), ex);
-        log.error("!!!!!!!!hrheheh");
         ErrorResponse error = ErrorResponse.builder()
                 .message(ExceptionConstants.RECORD_NOT_FOUND)
                 .build();
@@ -43,7 +42,7 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
 
-        log.error("!!!!!!!!!" + new Gson().toJson(errors.toString()));
+        log.error(new Gson().toJson(errors.toString()));
         return ResponseEntity.badRequest().body(errors);
     }
 

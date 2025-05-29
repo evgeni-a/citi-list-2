@@ -1,6 +1,6 @@
 package com.anchuk.citylist;
 
-import com.anchuk.citylist.exeption.EntityNotFoundException;
+import com.anchuk.citylist.exception.EntityNotFoundException;
 import com.anchuk.citylist.model.entity.CityEntity;
 import com.anchuk.citylist.repository.CityRepository;
 import org.junit.Test;
@@ -22,7 +22,7 @@ public class CityRepositoryTest {
     private CityRepository cityRepository;
 
     @Test
-    public void cityEntityRepository_whenSaveAndRetreiveEntity_thenOK() {
+    public void cityEntityRepository_whenSaveAndGetEntity_thenOK() {
         CityEntity city = cityRepository.save(CityEntity.builder().name("name").photo("photo").build());
         CityEntity foundEntity = cityRepository.findById(city.getId()).orElseThrow(EntityNotFoundException::new);
 
@@ -38,19 +38,19 @@ public class CityRepositoryTest {
         Page<CityEntity> foundEntity = cityRepository.findByNameContainsIgnoreCase("isci", Pageable.ofSize(8));
 
         assertNotNull(foundEntity);
-        assertEquals(foundEntity.getContent().get(0).getPhoto(), city.getPhoto());
+        assertEquals(foundEntity.getContent().getFirst().getPhoto(), city.getPhoto());
     }
 
 
     @Test
     public void cityEntityRepository_whenSearchEntityAbsent() {
-        CityEntity city = cityRepository.save(CityEntity.builder().name("ThisIsCity Name").photo("http://prhotphoto123").build());
+        cityRepository.save(CityEntity.builder().name("ThisIsCity Name").photo("http://prhotphoto123").build());
         Page<CityEntity> foundEntity = cityRepository.findByNameContainsIgnoreCase("isadasdsci", Pageable.ofSize(8));
 
         assertNotNull(foundEntity);
-        assertEquals(foundEntity.getTotalElements(), 0);
+        assertEquals(0, foundEntity.getTotalElements());
         assertNotNull(foundEntity.getContent());
-        assertEquals(foundEntity.getContent().size(), 0);
+        assertEquals(0, foundEntity.getContent().size());
     }
 
 

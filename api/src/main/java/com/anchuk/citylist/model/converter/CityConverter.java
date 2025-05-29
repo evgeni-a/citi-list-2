@@ -7,6 +7,10 @@ import com.anchuk.citylist.model.entity.CityEntity;
 import org.springframework.data.domain.Page;
 
 public class CityConverter {
+
+    private CityConverter() {
+    }
+
     public static CityDto convertToDto(CityEntity cityEntity) {
         return CityDto.builder()
                 .id(cityEntity.getId())
