@@ -1,13 +1,19 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import Navigation from "../components/Navigation";
+import CityList from "../components/CityList";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "City List" },
+    { name: "description", content: "Browse and manage cities" },
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  return (
+    <>
+      <Navigation />
+      <CityList />
+    </>
+  );
 }

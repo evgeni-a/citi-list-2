@@ -19,7 +19,7 @@ public class CrossOriginConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                String frontendUrl = defaultIfBlank(env.getProperty("FRONTEND_URL"), "http://localhost:8080");
+                String frontendUrl = defaultIfBlank(env.getProperty("FRONTEND_URL"), "http://localhost:5173");
                 log.warn("FRONTEND_URL=" + frontendUrl);
                 registry.addMapping("/**")
                         .allowedMethods("*")
