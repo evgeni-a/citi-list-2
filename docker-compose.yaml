@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:14.6
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=citylist
+    ports:
+      - '5434:5432'
+#    volumes:
+#      - city-list:/var/lib/postgresql/data
+
+  db-test:
+    image: postgres:14.6
+    restart: always
+    environment:
+      - POSTGRES_USER=postgrestest
+      - POSTGRES_PASSWORD=postgrestest
+      - POSTGRES_DB=test-citylist
+    ports:
+      - '5433:5432'
+
+#volumes:
+#  city-list:

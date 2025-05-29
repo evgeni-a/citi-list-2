@@ -1,0 +1,24 @@
+server:
+  port: 8081
+
+logging:
+  level:
+    "liquibase" : info
+
+spring:
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/test-citylist
+    username: postgrestest
+    password: postgrestest
+
+    jpa:
+      hibernate:
+        ddl-auto: validate
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-test.xml
+
+rsa:
+  public-key: classpath:test-certs/public.pem
+  private-key: classpath:test-certs/private.pem

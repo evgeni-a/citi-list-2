@@ -1,0 +1,27 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <include file="./db/sql/22.12.24.cities_table_creation.sql" />
+
+    <changeSet id="initialCitiesData" author="EvgeniA" labels="data">
+        <loadData file="./db/data/22.12.24.cities.csv" primaryKey="id" tableName="cities" usePreparedStatements="true"/>
+        <sql>SELECT setval('cities_id_seq', (SELECT max(id) FROM cities) + 1);</sql>
+    </changeSet>
+
+    <include file="./db/sql/22.12.26.roles_users_tables.sql" />
+
+    <changeSet id="initialRolesData" author="EvgeniA" labels="data">
+        <loadData file="./db/data/22.12.26.roles.csv" primaryKey="id" tableName="roles" usePreparedStatements="true"/>
+        <sql>SELECT setval('roles_id_seq', (SELECT max(id) FROM roles) + 1);</sql>
+    </changeSet>
+
+    <changeSet id="2::initialUsersData" author="EvgeniA" labels="data">
+        <loadData file="./db/data/22.12.26-01.users.csv" primaryKey="id" tableName="users" usePreparedStatements="true"/>
+        <sql>SELECT setval('users_id_seq', (SELECT max(id) FROM users) + 1);</sql>
+    </changeSet>
+
+    <changeSet id="2::initialUserRolesData" author="EvgeniA" labels="data">
+        <loadData file="./db/data/22.12.26-02.user_role.csv" primaryKey="id" tableName="user_role" usePreparedStatements="true"/>
+    </changeSet>
+
+
+</databaseChangeLog>
