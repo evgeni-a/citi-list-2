@@ -1,87 +1,198 @@
-# Welcome to React Router!
+# Frontend Application
 
-A modern, production-ready template for building full-stack React applications using React Router.
+A modern React application built with React Router v7, TypeScript, and Tailwind CSS.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## 🚀 Tech Stack
 
-## Features
+- **React 19** - UI Library
+- **React Router v7** - Routing with SSR support
+- **TypeScript** - Type safety
+- **Tailwind CSS v4** - Styling
+- **Vite** - Build tool
+- **Axios** - HTTP client
+- **ESLint + Prettier** - Code quality
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+## 📁 Project Structure
 
-## Getting Started
+```
+frontend/
+├── app/
+│   ├── components/          # Reusable UI components
+│   ├── context/            # React Context providers
+│   ├── hooks/              # Custom React hooks
+│   ├── routes/             # Route components
+│   ├── services/           # API services
+│   └── root.tsx           # Root application component
+├── public/                 # Static assets
+├── .eslintrc.js           # ESLint configuration
+├── .prettierrc            # Prettier configuration
+├── tsconfig.json          # TypeScript configuration
+├── vite.config.ts         # Vite configuration
+└── package.json           # Dependencies and scripts
+```
 
-### Installation
+## 🛠️ Development
 
-Install the dependencies:
+### Prerequisites
+
+- Node.js 20+ 
+- npm or yarn
+
+### Getting Started
+
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+2. **Set up environment variables:**
+   ```bash
+   cp env.example .env.local
+   ```
+   Edit `.env.local` with your configuration.
+
+3. **Start development server:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Run linting:**
+   ```bash
+   npm run lint
+   ```
+
+5. **Format code:**
+   ```bash
+   npm run format
+   ```
+
+6. **Type checking:**
+   ```bash
+   npm run typecheck
+   ```
+
+7. **Build for production:**
+   ```bash
+   npm run build
+   ```
+
+8. **Start production server:**
+   ```bash
+   npm start
+   ```
+
+## 📝 Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm start` - Start production server
+- `npm run lint` - Run ESLint with auto-fix
+- `npm run lint:check` - Check linting without fixing
+- `npm run format` - Format code with Prettier
+- `npm run format:check` - Check formatting
+- `npm run typecheck` - Run TypeScript type checking
+- `npm run ci` - Run all checks (used in CI)
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Create a `.env.local` file with:
+
+```env
+VITE_API_BASE_URL=http://localhost:8081/api/v1
+VITE_APP_ENV=development
+VITE_ENABLE_DEV_TOOLS=true
+```
+
+### Code Quality
+
+- **ESLint**: Configured with TypeScript, React, and accessibility rules
+- **Prettier**: Consistent code formatting
+- **TypeScript**: Strict mode with additional checks for better code quality
+
+## 🏗️ Architecture
+
+### State Management
+- **React Context** for global state (Authentication)
+- **Local state** with `useState` for component-specific state
+- **Custom hooks** for reusable stateful logic
+
+### API Integration
+- **Axios** with interceptors for request/response handling
+- **Environment-based** API URLs
+- **Error handling** and loading states
+- **Type-safe** API responses
+
+### Routing
+- **React Router v7** with SSR support
+- **File-based** routing in `app/routes/`
+- **Nested layouts** and error boundaries
+
+### Styling
+- **Tailwind CSS v4** for utility-first styling
+- **Responsive design** with mobile-first approach
+- **Dark mode** support built-in
+
+## 🐳 Docker
+
+The application is containerized with multi-stage Docker build:
 
 ```bash
-npm install
+# Build image
+docker build -t frontend .
+
+# Run container
+docker run -p 3000:3000 frontend
 ```
 
-### Development
+## 🚀 Deployment
 
-Start the development server with HMR:
+1. **Build the application:**
+   ```bash
+   npm run build
+   ```
 
-```bash
-npm run dev
-```
+2. **The build artifacts** will be in the `build/` directory
 
-Your application will be available at `http://localhost:5173`.
+3. **Serve the built application:**
+   ```bash
+   npm start
+   ```
 
-## Building for Production
+## 🔍 Best Practices
 
-Create a production build:
+### Code Organization
+- Components are organized by feature/domain
+- Custom hooks for reusable logic
+- Services layer for API integration
+- Type definitions for better IntelliSense
 
-```bash
-npm run build
-```
+### Performance
+- Lazy loading for images
+- Code splitting with manual chunks
+- Memoization with `useCallback` and `useMemo`
+- Optimized bundle size
 
-## Deployment
+### Accessibility
+- ARIA labels and roles
+- Keyboard navigation support
+- Screen reader friendly
+- Color contrast compliance
 
-### Docker Deployment
+### Security
+- Environment variables for sensitive data
+- Input validation and sanitization
+- HTTPS enforcement in production
+- Content Security Policy headers
 
-To build and run using Docker:
+## 🤝 Contributing
 
-```bash
-docker build -t my-app .
+1. Follow the existing code style
+2. Run linting and type checking before committing
+3. Write meaningful commit messages
+4. Update documentation when needed
 
-# Run the container
-docker run -p 3000:3000 my-app
-```
+## 📄 License
 
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+This project is private and proprietary.
